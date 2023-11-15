@@ -13,13 +13,26 @@ type Bag struct {
 	Name string
 }
 
+// nolint: gochecknoglobals
+var g graph.Graph[string, Bag]
+
+func followPredecessors(multiplier int, start string, p map[string]map[string]graph.Edge[string]) int {
+	sum := 0
+	for _, e := range p[start] {
+		sum += followPredecessors(e.Properties.Weight, e.Source, p)
+		sum += e.Properties.Weight
+	}
+
+	return sum * multiplier
+}
+
 func Run(fName string) {
 	inpBytes, _ := os.ReadFile(fName)
 	inpStr := string(inpBytes)
 	nameHash := func(b Bag) string {
 		return b.Name
 	}
-	g := graph.New(nameHash, graph.Directed())
+	g = graph.New(nameHash, graph.Directed())
 
 	for _, l := range strings.Split(strings.TrimSpace(inpStr), "\n") {
 		fields := strings.Fields(l)
@@ -44,10 +57,13 @@ func Run(fName string) {
 
 	colors := map[string]bool{} // not sure if it'll list doubles
 	_ = graph.DFS(g, "shiny-gold", func(value string) bool {
-		fmt.Println(value)
 		colors[value] = true
 		return false
 	})
 
 	fmt.Printf("P1: %d\n", len(colors)-1) // -1 for shiny-gold self
+
+	p, _ := g.PredecessorMap()
+	total := followPredecessors(1, "shiny-gold", p)
+	fmt.Printf("P2: %d\n", total)
 }
