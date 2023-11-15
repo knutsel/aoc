@@ -97,5 +97,4 @@ func Run(fName string) {
 	}
 
 	check(batch)
-
 }
