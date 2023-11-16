@@ -52,7 +52,7 @@ func Run(fName string) {
 	_, accVal := runProgram(program)
 	fmt.Printf("P1:%d\n", accVal)
 
-	// should have a test for more runs than jmps, also need 2 loops.
+	// should have a test for more runs than jmps, also need 2 loops, got lucky on the first swap I tried.
 	patched := 0
 
 	for {
