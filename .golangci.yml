@@ -7,7 +7,6 @@ linters-settings:
 linters:
   disable-all: false
   enable:
-    - depguard
     - dogsled
     - dupl
     - funlen
@@ -32,4 +31,5 @@ linters:
     - wsl
   disable:
     - structcheck
+    - depguard
     - revive
