@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// nolint: gochecknoglobals
 var cache = map[int]int{}
 
 func findArrangements(start int, inp []int) int {
