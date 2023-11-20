@@ -6,56 +6,6 @@ import (
 	"strings"
 )
 
-// type pos int
-
-// const (
-// 	floor = iota
-// 	empty
-// 	occupied
-// )
-
-// func runeToPos(c rune) pos {
-// 	switch c {
-// 	case '.':
-// 		return floor
-// 	case 'L':
-// 		return empty
-// 	case '#':
-// 		return occupied
-// 	default:
-// 		panic("Unexpected input")
-// 	}
-// }
-
-// func newState(y int, x int, grid [][]pos) pos {
-// 	return -1
-// }
-
-// func doMove(grid [][]pos) ([][]pos, int) {
-// 	newGrid := [][]pos{}
-
-// 	for y := range grid {
-// 		newRow := []pos{}
-// 		for x := range grid[y] {
-// 			newRow = append(newRow, newState(y, x, grid))
-// 		}
-
-// 		newGrid = append(newGrid, newRow)
-// 	}
-
-// 	return newGrid, -1
-// }
-
-// func inBounds(y int, x int, g []string) bool {
-// 	if x < 0 || y < 0 {
-// 		return false
-// 	}
-// 	if x >= len(g[0]) || y >= len(g) {
-// 		return false
-// 	}
-
-//		return true
-//	}
 type coord struct {
 	y int
 	x int
@@ -82,22 +32,6 @@ func newState(y int, x int, g []string) rune {
 			neighbors++
 		}
 	}
-
-	// for y:= range []int{}
-	// 	if y < 0 || y >= len(g) {
-	// 		continue
-	// 	}
-
-	// 	for x := x - 1; x <= x+1; x++ {
-	// 		if x < 0 || x >= len(g[0]) {
-	// 			continue
-	// 		}
-
-	// 		if g[y][x] == '#' {
-	// 			neighbors++
-	// 		}
-	// 	}
-	// }
 
 	if seatVal == 'L' && neighbors == 0 {
 		return '#'
@@ -136,19 +70,8 @@ func printGrid(g []string) {
 func Run(fName string) {
 	inpBytes, _ := os.ReadFile(fName)
 	inpStr := string(inpBytes)
-	// grid := [][]pos{} // y, x
 	grid := []string{}
-
-	for _, l := range strings.Split(strings.TrimSpace(inpStr), "\n") {
-		// row := []pos{}
-		// for _, c := range l {
-		// 	row = append(row, runeToPos(c))
-		// }
-
-		// grid = append(grid, row)
-		grid = append(grid, l)
-	}
-
+	grid = append(grid, strings.Split(strings.TrimSpace(inpStr), "\n")...)
 	previous := strings.Join(grid, "")
 
 	for {
