@@ -20,8 +20,9 @@ const (
 )
 
 type ferry struct {
-	location point
-	facing   direction
+	location         point
+	waypointLocation point
+	facing           direction
 }
 
 func (f *ferry) rotate(value int) {
@@ -70,10 +71,62 @@ func (f *ferry) move(m string) {
 	}
 }
 
+func (f *ferry) rotateP2(value int) {
+	if value < 0 {
+		switch value {
+		case -90:
+			value = 270
+		case -180:
+			value = 180
+		case -270:
+			value = 90
+		}
+	}
+
+	howMuch := value / 90
+
+	for i := 0; i < howMuch; i++ {
+		x := f.waypointLocation.y
+		y := -f.waypointLocation.x
+		f.waypointLocation.y = y
+		f.waypointLocation.x = x
+	}
+}
+
+func (f *ferry) moveP2(m string) {
+	action, value := 'x', 0
+
+	_, err := fmt.Sscanf(m, "%c%d", &action, &value)
+	if err != nil {
+		panic(err)
+	}
+
+	switch action {
+	case 'N':
+		f.waypointLocation.y += value
+	case 'S':
+		f.waypointLocation.y -= value
+	case 'E':
+		f.waypointLocation.x += value
+	case 'W':
+		f.waypointLocation.x -= value
+	case 'F':
+		xMove := (f.waypointLocation.x) * value
+		yMove := (f.waypointLocation.y) * value
+		f.location.x += xMove
+		f.location.y += yMove
+	case 'R':
+		f.rotateP2(value)
+	case 'L':
+		f.rotateP2(-value)
+	}
+}
+
 func abs(inp int) int {
 	if inp < 0 {
 		return -inp
 	}
+
 	return inp
 }
 
@@ -93,4 +146,15 @@ func Run(fName string) {
 	}
 
 	fmt.Printf("P1:%d\n", abs(f.location.x)+abs(f.location.y))
+	f = ferry{
+		location:         point{0, 0},
+		facing:           east,
+		waypointLocation: point{1, 10},
+	}
+
+	for _, m := range moves {
+		f.moveP2(m)
+	}
+
+	fmt.Printf("P2:%d\n", abs(f.location.x)+abs(f.location.y))
 }
