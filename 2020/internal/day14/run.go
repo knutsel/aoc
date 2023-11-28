@@ -15,7 +15,7 @@ type computer struct {
 	currentMask   mask
 	memory        map[int64]int64
 	currentMaskP2 string
-	memoryP2      map[int64][]int64
+	memoryP2      map[int64]int64
 }
 
 func (c *computer) setMask(l string) {
@@ -48,6 +48,35 @@ func (c *computer) setMem(l string) {
 	newVal &= c.currentMask.andMask
 
 	c.memory[location] = newVal
+
+	// part2
+	xLoc := []int{}
+	addresses := []int64{}
+	powerOfTwo := 0
+	baseAddress := location
+
+	for i := len(c.currentMaskP2) - 1; i >= 0; i-- {
+		if c.currentMaskP2[i] == '1' {
+			baseAddress |= 1 << powerOfTwo
+		} else if c.currentMaskP2[i] == 'X' {
+			xLoc = append(xLoc, powerOfTwo)
+		}
+		powerOfTwo++
+	}
+
+	addresses = append(addresses, baseAddress)
+
+	for _, xIndex := range xLoc {
+		for _, val := range addresses {
+			with1 := val | 1<<xIndex
+			with0 := with1 ^ 1<<xIndex
+			addresses = append(addresses, with1, with0)
+		}
+	}
+
+	for _, a := range addresses {
+		c.memoryP2[a] = value
+	}
 }
 
 func Run(fName string) {
@@ -57,6 +86,7 @@ func Run(fName string) {
 	c := computer{
 		currentMask: mask{},
 		memory:      map[int64]int64{},
+		memoryP2:    map[int64]int64{},
 	}
 
 	for _, l := range strings.Split(strings.TrimSpace(inpStr), "\n") {
@@ -68,9 +98,15 @@ func Run(fName string) {
 	}
 
 	sum := int64(0)
+	sumP2 := int64(0)
+
 	for _, v := range c.memory {
 		sum += v
 	}
 
-	fmt.Printf("P1: %d\n", sum)
+	for _, v := range c.memoryP2 {
+		sumP2 += v
+	}
+
+	fmt.Printf("P1:%d P2:%d\n", sum, sumP2)
 }
