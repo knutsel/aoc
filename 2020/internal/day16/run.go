@@ -14,8 +14,9 @@ type intRange struct {
 }
 
 type rule struct {
-	name   string
-	ranges []intRange
+	name          string
+	ranges        []intRange
+	possibleIndex []int
 }
 
 type ticket []int
@@ -99,6 +100,20 @@ func mergeRules(inp []rule) []intRange {
 	return output
 }
 
+func resolveTicketLayout(rules []rule, tickets []ticket) {
+	for _, r := range rules {
+		for ti, t := range tickets {
+			for loc := range t {
+				if (t[loc] >= r.ranges[0].start && t[loc] <= r.ranges[0].stop) || t[loc] >= r.ranges[1].start && t[loc] <= r.ranges[1].stop {
+					fmt.Printf("rule:%+v matches w ticket %d loc %d val:%d\n", r, ti, loc, t[loc])
+				} else {
+					fmt.Printf("rule:%+v DOES NOT matche w ticket %d loc %d val:%d\n", r, ti, loc, t[loc])
+				}
+			}
+		}
+	}
+}
+
 func Run(fName string) {
 	inpBytes, _ := os.ReadFile(fName)
 	inpStr := string(inpBytes)
@@ -128,4 +143,5 @@ func Run(fName string) {
 	}
 
 	fmt.Printf("P1:%d len(validTickets): %d\n", sumVal, len(validTickets))
+	resolveTicketLayout(rules, validTickets)
 }
