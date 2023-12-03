@@ -32,12 +32,8 @@ func sumParts(s []string) int {
 	for y, l := range s {
 		for _, m := range reNum.FindAllStringIndex(l, -1) {
 			if isNeighbor[point{y, m[0]}] || isNeighbor[point{y, m[1] - 1}] {
-				numVal, err := strconv.Atoi(l[m[0]:m[1]])
-				if err != nil {
-					panic(err)
-				}
-				// fmt.Printf("Adding %d\n", numVal)
-				sum += numVal
+				intVal, _ := strconv.Atoi(l[m[0]:m[1]])
+				sum += intVal
 			}
 		}
 	}
