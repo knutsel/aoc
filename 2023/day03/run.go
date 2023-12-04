@@ -56,9 +56,7 @@ func sumParts2(s []string) {
 func Run(fName string) {
 	inpBytes, _ := os.ReadFile(fName)
 	inpStr := string(inpBytes)
-	inputLines := strings.Split(strings.TrimSpace(inpStr), "\n")
-	schematic := []string{} // let's try treating them as strings
-	schematic = append(schematic, inputLines...)
+	schematic := strings.Split(strings.TrimSpace(inpStr), "\n")
 
 	sumParts2(schematic)
 }
