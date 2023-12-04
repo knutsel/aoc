@@ -19,7 +19,7 @@ func Run(fName string) {
 
 	for i, l := range strings.Split(strings.TrimSpace(inpStr), "\n") {
 		parts := strings.Split(l, "|")
-		winningNums := strings.Fields(parts[0])
+		winningNums := strings.Fields(strings.Split(parts[0], ":")[1])
 		myNums := strings.Fields(parts[1])
 		winning := map[string]bool{}
 
@@ -42,6 +42,7 @@ func Run(fName string) {
 		copies[i]++
 		sumP2++
 
+		// had a little help with this.
 		for j := 1; j <= thisCard; j++ {
 			copies[i+j] += copies[i]
 			sumP2 += copies[i]
