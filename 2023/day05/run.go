@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -14,6 +15,9 @@ type mapEntry struct {
 	length      int
 }
 
+// global is faster
+var mapOfEverything [][]mapEntry
+
 func toInt(s string) int {
 	iVal, err := strconv.Atoi(s)
 	if err != nil {
@@ -23,41 +27,24 @@ func toInt(s string) int {
 	return iVal
 }
 
-func locForSeed(mapOfEverything map[string][]mapEntry, sourceVal int) int {
-	sourceName := "seed"
-
-	for {
-		for mName, m := range mapOfEverything {
-			mFrom := strings.Split(mName, "-")[0]
-			mTo := strings.Fields(strings.Split(mName, "-")[2])[0]
-
-			if mFrom != sourceName {
-				continue
+func locForSeed(sourceVal int) int {
+	for _, m := range mapOfEverything {
+		for _, entry := range m {
+			if sourceVal >= entry.source && sourceVal < entry.source+entry.length {
+				sourceVal = entry.destination - entry.source + sourceVal // the value for the next mapping
+				break
 			}
-
-			sourceName = mTo // the value for the next mapping
-
-			for _, entry := range m {
-				if sourceVal >= entry.source && sourceVal <= entry.source+entry.length {
-					sourceVal = entry.destination - entry.source + sourceVal // the value for the next mapping
-					break
-				}
-			}
-
-			if sourceName == "location" {
-				return sourceVal
-			}
-
-			break
 		}
 	}
+
+	return sourceVal
 }
 
 func Run(fName string) {
 	inpBytes, _ := os.ReadFile(fName)
 	inpStr := string(inpBytes)
 	seeds := []int{}
-	mapOfEverything := map[string][]mapEntry{}
+	mapOfEverything = [][]mapEntry{}
 
 	for i, part := range strings.Split(strings.TrimSpace(inpStr), "\n\n") {
 		if i == 0 {
@@ -68,7 +55,6 @@ func Run(fName string) {
 			continue
 		} // else
 
-		name := strings.Split(part, ":")[0]
 		entries := []mapEntry{}
 
 		for _, eLine := range strings.Split(strings.TrimSpace(strings.Split(part, ":")[1]), "\n") {
@@ -80,19 +66,29 @@ func Run(fName string) {
 			})
 		}
 
-		// sort.Slice(entries, func(i, j int) bool {
-		// 	return entries[i].source < entries[j].source
-		// })
+		sort.Slice(entries, func(i, j int) bool { // sorting it saves 50% on total exec time
+			return entries[i].source < entries[j].source
+		})
 
-		mapOfEverything[name] = entries
+		mapOfEverything = append(mapOfEverything, entries)
 	}
 
 	minLoc := math.MaxInt
 
 	for _, seed := range seeds {
-		loc := locForSeed(mapOfEverything, seed)
+		loc := locForSeed(seed)
 		minLoc = min(minLoc, loc)
 	}
 
 	fmt.Printf("P1:%d\n", minLoc)
+	minLoc = math.MaxInt
+
+	for i := 0; i < len(seeds)-2; i += 2 {
+		for j := seeds[i]; j < seeds[i]+seeds[i+1]; j++ {
+			loc := locForSeed(j)
+			minLoc = min(minLoc, loc)
+		}
+	}
+
+	fmt.Printf("P2:%d\n", minLoc)
 }
