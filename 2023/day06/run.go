@@ -35,7 +35,9 @@ func race(t, d int) int {
 
 func Run(fName string) {
 	inpBytes, _ := os.ReadFile(fName)
-	raceInfo := [][]int{} // 0 is the times, 1 is the distances
+	p1Info := [][]int{} // 0 is the times, 1 is the distances
+	p2Info := []int{}
+	p1 := 1
 
 	for _, l := range strings.Split(strings.TrimSpace(string(inpBytes)), "\n") {
 		nums := []int{}
@@ -43,14 +45,13 @@ func Run(fName string) {
 			nums = append(nums, toInt(w))
 		}
 
-		raceInfo = append(raceInfo, nums)
+		p2Info = append(p2Info, toInt(strings.ReplaceAll(strings.Split(l, ":")[1], " ", "")))
+		p1Info = append(p1Info, nums)
 	}
 
-	mult := 1
-
-	for i := range raceInfo[0] {
-		mult *= race(raceInfo[0][i], raceInfo[1][i])
+	for i := range p1Info[0] {
+		p1 *= race(p1Info[0][i], p1Info[1][i])
 	}
 
-	fmt.Printf("P1:%d\n", mult)
+	fmt.Printf("P1:%d P2:%d\n", p1, race(p2Info[0], p2Info[1]))
 }
