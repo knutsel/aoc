@@ -8,9 +8,9 @@ func TestReal(t *testing.T) {
 }
 
 func TestRanking(t *testing.T) {
-	// scoreHand("23456")
-	// scoreHand("33444")
-	// scoreHand("TTJJ1")
-	scoreHand("AA9AA")
-	scoreHand("AATAT")
+
+	for _, v := range []string{"JAAJA", "AAAJA", "JJJJJ"} {
+		s := scoreHandP2(v, 0)
+		t.Logf("%s -> 0x%x (%d)", v, s, s)
+	}
 }
