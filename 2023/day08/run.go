@@ -30,49 +30,10 @@ func LCM(a, b int, integers ...int) int {
 	return result
 }
 
-func Run(fName string) {
-	inpBytes, _ := os.ReadFile(fName)
-	p1, p2 := 0, 0
-	right := map[string]string{}
-	left := map[string]string{}
-	re := regexp.MustCompile(`^(?P<key>\w{3}) = \((?P<left>\w{3}), (?P<right>\w{3})\)$`)
-	leftRight := strings.Split(strings.TrimSpace(string(inpBytes)), "\n")[0]
-
-	for _, l := range strings.Split(strings.TrimSpace(string(inpBytes)), "\n")[2:] {
-		mapping := re.FindStringSubmatch(l)
-		left[mapping[1]] = mapping[2]
-		right[mapping[1]] = mapping[3]
-	}
-
-	current := "AAA"
-
-	for {
-		side := leftRight[p1%len(leftRight)]
-		p1++
-
-		if side == 'L' {
-			current = left[current]
-		} else {
-			current = right[current]
-		}
-
-		if current == "ZZZ" {
-			break
-		}
-	}
-
-	fmt.Printf("P1:%d\n", p1)
-
-	current = "A"
-	currentList := []string{}
-	for k, _ := range left {
-		if strings.HasSuffix(k, current) {
-			currentList = append(currentList, k)
-		}
-	}
-
-	zCount := 0
+func follow(currentList []string, to string, left, right map[string]string, leftRight string) int {
+	zCount, p2 := 0, 0
 	jumps := []int{}
+
 outter:
 	for {
 		side := leftRight[p2%len(leftRight)]
@@ -86,7 +47,6 @@ outter:
 
 			if strings.HasSuffix(currentList[i], "Z") {
 				zCount++
-				fmt.Printf("Z suffix at %d for index %d zCount:%d (len:%d)\n", p2, i, zCount, len(currentList))
 				jumps = append(jumps, p2)
 			}
 			if zCount == len(currentList) {
@@ -95,5 +55,34 @@ outter:
 		}
 	}
 
-	fmt.Printf("P2:%d\n", LCM(jumps[0], jumps[1], jumps[2:]...))
+	if len(jumps) > 1 {
+		return LCM(jumps[0], jumps[1], jumps[2:]...)
+	}
+
+	return jumps[0]
+}
+
+func Run(fName string) {
+	inpBytes, _ := os.ReadFile(fName)
+	right := map[string]string{}
+	left := map[string]string{}
+	re := regexp.MustCompile(`^(?P<key>\w{3}) = \((?P<left>\w{3}), (?P<right>\w{3})\)$`)
+	leftRight := strings.Split(strings.TrimSpace(string(inpBytes)), "\n")[0]
+
+	for _, l := range strings.Split(strings.TrimSpace(string(inpBytes)), "\n")[2:] {
+		mapping := re.FindStringSubmatch(l)
+		left[mapping[1]] = mapping[2]
+		right[mapping[1]] = mapping[3]
+	}
+
+	fmt.Printf("P1: %d\n", follow([]string{"AAA"}, "ZZZ", left, right, leftRight))
+
+	from := []string{}
+	for k, _ := range left {
+		if strings.HasSuffix(k, "A") {
+			from = append(from, k)
+		}
+	}
+
+	fmt.Printf("P2: %d\n", follow(from, "Z", left, right, leftRight))
 }
