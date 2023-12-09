@@ -16,7 +16,7 @@ func toInt(s string) int {
 	return iVal
 }
 
-func calcSequences(sequence [][]int, level int) int {
+func calcSequences(sequence [][]int, level int) (int, int) {
 	input := sequence[level]
 	allZeros := true
 
@@ -27,11 +27,18 @@ func calcSequences(sequence [][]int, level int) int {
 	}
 
 	if allZeros {
-		for i := len(sequence) - 1; i > 0; i-- {
+		prependValue := 0
+
+		for i := len(sequence) - 1; i > 0; i-- { // p1 expansion
 			sequence[i-1] = append(sequence[i-1], sequence[i][len(sequence[i])-1]+sequence[i-1][len(sequence[i-1])-1])
+
+			sequence[i] = append([]int{prependValue}, sequence[i]...)
+			prependValue = sequence[i-1][0] - sequence[i][0]
 		}
 
-		return sequence[0][len(sequence[0])-1]
+		sequence[0] = append([]int{prependValue}, sequence[0]...)
+
+		return sequence[0][len(sequence[0])-1], sequence[0][0]
 	}
 
 	diffSequence := []int{}
@@ -64,7 +71,9 @@ func Run(fName string) {
 	}
 
 	for _, s := range inp {
-		p1 += calcSequences(s, 0)
+		p1val, p2Val := calcSequences(s, 0)
+		p1 += p1val
+		p2 += p2Val
 	}
 
 	fmt.Printf("P1: %d\n", p1)

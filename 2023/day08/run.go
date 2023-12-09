@@ -7,9 +7,8 @@ import (
 	"strings"
 )
 
-// from https://siongui.github.io/2017/06/03/go-find-lcm-by-gcd/
-// greatest common divisor (GCD) via Euclidean algorithm
-func GCD(a, b int) int {
+// GCD, LCM from https://siongui.github.io/2017/06/03/go-find-lcm-by-gcd/
+func GCD(a, b int) int { // greatest common divisor (GCD) via Euclidean algorithm
 	for b != 0 {
 		t := b
 		b = a % b
@@ -19,8 +18,7 @@ func GCD(a, b int) int {
 	return a
 }
 
-// find Least Common Multiple (LCM) via GCD
-func LCM(a, b int, integers ...int) int {
+func LCM(a, b int, integers ...int) int { // find Least Common Multiple (LCM) via GCD
 	result := a * b / GCD(a, b)
 
 	for i := 0; i < len(integers); i++ {
@@ -30,24 +28,31 @@ func LCM(a, b int, integers ...int) int {
 	return result
 }
 
-func follow(currentList []string, to string, left, right map[string]string, leftRight string) int {
-	zCount, p2 := 0, 0
+func follow(from string, to string, left, right map[string]string, leftRight string) int {
+	currentList := []string{}
+	for k, _ := range left {
+		if strings.HasSuffix(k, from) {
+			currentList = append(currentList, k)
+		}
+	}
+
+	zCount, sum := 0, 0
 	jumps := []int{}
 
 outter:
 	for {
-		side := leftRight[p2%len(leftRight)]
-		p2++
-		for i, _ := range currentList {
+		side := leftRight[sum%len(leftRight)]
+		sum++
+		for i := range currentList {
 			if side == 'L' {
 				currentList[i] = left[currentList[i]]
 			} else {
 				currentList[i] = right[currentList[i]]
 			}
 
-			if strings.HasSuffix(currentList[i], "Z") {
+			if strings.HasSuffix(currentList[i], to) {
 				zCount++
-				jumps = append(jumps, p2)
+				jumps = append(jumps, sum)
 			}
 			if zCount == len(currentList) {
 				break outter
@@ -75,14 +80,6 @@ func Run(fName string) {
 		right[mapping[1]] = mapping[3]
 	}
 
-	fmt.Printf("P1: %d\n", follow([]string{"AAA"}, "ZZZ", left, right, leftRight))
-
-	from := []string{}
-	for k, _ := range left {
-		if strings.HasSuffix(k, "A") {
-			from = append(from, k)
-		}
-	}
-
-	fmt.Printf("P2: %d\n", follow(from, "Z", left, right, leftRight))
+	fmt.Printf("P1: %d\n", follow("AAA", "ZZZ", left, right, leftRight))
+	fmt.Printf("P2: %d\n", follow("A", "Z", left, right, leftRight))
 }
