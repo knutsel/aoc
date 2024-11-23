@@ -1,12 +1,12 @@
-package utils
+package aoc2024
 
 import (
 	"fmt"
 	"log"
 )
 
-func Template(fName string) {
-	lines, err := ReadLines(fName)
+func Day00(fName string) {
+	lines, err := readLines(fName)
 	if err != nil {
 		log.Fatal(err)
 	}
