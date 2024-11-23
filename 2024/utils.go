@@ -1,4 +1,5 @@
 package aoc2024
+//
 
 import (
 	"os"
