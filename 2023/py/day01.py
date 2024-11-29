@@ -1,6 +1,6 @@
 import utils
 
-lines = utils.read_file('input01.txt')
+lines = utils.read_file('day01_example.txt')
 
 # Part 1
 total = 0
