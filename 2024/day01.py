@@ -1,7 +1,5 @@
-import utils
+from aocd import get_data
 
-lines = utils.read_file('day01_example.txt')
-# lines = utils.read_file('day01.txt')
+data = get_data(year=2023, day=1).splitlines()
 
-for line in lines:
-    print(line)
+print(data)
