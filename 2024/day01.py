@@ -10,10 +10,9 @@ for line in data:
 ldata.sort()
 rdata.sort()
 
-i = 0
 dist = 0
 sim = 0
-for _ in ldata:
+for i, _ in enumerate(ldata):
     dist += abs(rdata[i] - ldata[i])
     count = rdata.count(ldata[i])
     sim += count * ldata[i]
