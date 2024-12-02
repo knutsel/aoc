@@ -24,14 +24,12 @@ for line in data:
 p1 = 0
 p2 = 0
 for lline in levels:
-    p1_r = safe(lline)
-    p1 += p1_r
-    if p1_r == 0:
+    if safe(lline):
+        p1 += 1
+    else:
         for i in range(len(lline)):
-            p2_r = safe(lline[:i] + lline[i + 1:])
-            p2 += p2_r
-            if p2_r == 1:
+            if safe(lline[:i] + lline[i + 1:]):
+                p2 += 1
                 break
 
-print(p1)
-print(p1 + p2)
+print(f"{p1}\n{p1 + p2}")
