@@ -21,8 +21,7 @@ for line in data:
         llevels.append(int(val))
     levels.append(llevels)
 
-p1 = 0
-p2 = 0
+p1 = p2 = 0
 for lline in levels:
     if safe(lline):
         p1 += 1
