@@ -6,7 +6,7 @@ instr = get_data(year=2024, day=3)
 
 
 def sum(instr):
-    mults = re.findall(r'mul\(\d+,\d+\)', instr)
+    mults = re.findall(r'mul\(\d+,\d+\)', instr, re.MULTILINE)
     sum = 0
     for mult in mults:
         nums = re.findall(r'\d+', mult)
@@ -17,7 +17,7 @@ def sum(instr):
 print(sum(instr))
 
 s = re.subn(r'don\'t\(\).*?do\(\)', '_____', instr, 0, re.MULTILINE)
-print(s[0])
+# print(s[0])
 print(s[1], sum(s[0]))
 
 # groups = re.findall(r'(do\(\).*?)(don\'t\(\).*?)', "do()"+instr+"don't()")
