@@ -1,9 +1,9 @@
-# from aocd import get_data
-#
-# instr = get_data(year=2024, day=5).splitlines()
+from aocd import get_data
 
-with open("example.txt") as file:
-    lines = file.read()
+lines = get_data(year=2024, day=5)
+
+# with open("example.txt") as file:
+#     lines = file.read()
 
 ordering = {}
 rev = {}
