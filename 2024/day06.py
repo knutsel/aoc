@@ -1,14 +1,4 @@
-from aocd import get_data
-
-
-# use y, x in everything!
-
-def get_input(for_example):
-    if for_example:
-        with open("/tmp/ex") as file:
-            return file.read().splitlines()
-    else:
-        return get_data(year=2024, day=6).splitlines()
+from utils import get_input
 
 
 def print_grid():
@@ -18,7 +8,7 @@ def print_grid():
         print("")
 
 
-def walk(cur_loc, cur_dir, find_loops):
+def walk(cur_loc, cur_dir):
     visited = set()
     vis_with_direction = set()
     while True:
@@ -30,7 +20,7 @@ def walk(cur_loc, cur_dir, find_loops):
         else:
             cur_loc = new_loc
             visited.add(cur_loc)
-        if (cur_loc, cur_dir) in vis_with_direction and find_loops:
+        if (cur_loc, cur_dir) in vis_with_direction:
             return visited, True
         vis_with_direction.add((cur_loc, cur_dir))
     return visited, False
@@ -42,26 +32,26 @@ def is_inbounds(y, x):
     return True
 
 
-data = get_input(for_example=False)
+data = get_input(for_example=False, day=6)
 step = {"^": (-1, 0), ">": (0, 1), "<": (0, -1), "v": (1, 0)}
 rotate = {"^": ">", ">": "v", "<": "^", "v": "<"}
 start_loc = (-1, -1)
 direction = "x"
 grid = []
-for y, line in enumerate(data):
+for y, line in enumerate(data):  # use y, x in everything --> [line-no][char-on-line]
     grid.append(list(line))
     for x, char in enumerate(line):
         if char == '^' or char == 'v' or char == '<' or char == '>':
             start_loc = y, x
             direction = char
 
-vis, loop = walk(start_loc, direction, False)
+vis, loop = walk(start_loc, direction)
 
 p1 = len(vis)
 p2 = 0
 for i, v in enumerate(vis):
     grid[v[0]][v[1]] = '#'
-    vis, loop = walk(start_loc, direction, True)
+    vis, loop = walk(start_loc, direction)
     if loop:
         p2 += 1
     grid[v[0]][v[1]] = '.'
