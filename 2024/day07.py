@@ -2,7 +2,6 @@ from utils import get_input
 
 
 def do_op(operand1, operand2, operator):
-    print(f"{operand1} {operator} {operand2}")
     match operator:
         case '+':
             return operand1 + operand2
@@ -21,9 +20,7 @@ def is_valid(calculated, wanted, operation_list):
     operation_list = operation_list[1:]
     for operator in '*', '+':
         calculated = do_op(op1, op2, operator)
-        if not is_valid(calculated, wanted, operation_list):
-            continue
-        else:
+        if is_valid(calculated, wanted, operation_list):
             return True
 
 
