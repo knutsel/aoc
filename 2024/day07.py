@@ -7,6 +7,8 @@ def do_op(operand1, operand2, operator):
             return operand1 + operand2
         case '*':
             return operand1 * operand2
+        case '|':
+            return int(str(operand1) + str(operand2))
 
 
 def is_valid(calculated, wanted, operation_list):
@@ -18,7 +20,7 @@ def is_valid(calculated, wanted, operation_list):
     op1 = calculated
     op2 = operation_list[0]
     operation_list = operation_list[1:]
-    for operator in '*', '+':
+    for operator in '*', '+', '|':
         calculated = do_op(op1, op2, operator)
         if is_valid(calculated, wanted, operation_list):
             return True
