@@ -7,57 +7,8 @@ def do_op(operand1, operand2, operator):
         case '+':
             return operand1 + operand2
         case '*':
-            # if operand1 == 0:
-            #     operand1 = 1
             return operand1 * operand2
 
-
-# def is_valid(result, operands, running_total, oplist):
-#     print(f"r:{result}, operands:{operands}")
-#
-#     for i, operand in enumerate(operands[:-1]):
-#         oplist.append(operand)
-#         for operator in '+', '*':
-#             new_value = running_total + do_op(operand,  operands[i+1], operator)
-#             if new_value < result:
-#                 oplist.append(operator)
-#                 # oplist.append([str(operand), str(operands[i+1]), operator])
-#                 if len(operands)-i <= 2:
-#                     continue
-#                 if is_valid(result, operands[i+1:], new_value, oplist):
-#                     continue
-
-# total_after_op = running_total + operand * operands[i+1]
-# if total_after_op < result:
-# oplist.append(str(operand))
-# oplist.append('*')
-# oplist.append(str(operands[i+1]))
-# if is_valid(result, operands[i+1:], running_total, oplist):
-#     continue
-# else:
-#     total_after_op = running_total + op * operands[i + 1]
-#     # running_total += op + operands[i+1]
-#     if total_after_op > result:
-#         continue
-#     oplist.append(str(op))
-#     oplist.append('+')
-#     oplist.append(str(operands[i+1]))
-#     if is_valid(result, operands[i+1:], running_total, oplist):
-#         continue
-
-# if new_value == result:
-#     return True
-# else:
-#     return False
-
-# g= {} # lets try with a graph
-# for i, op in enumerate(operands[:-1]):
-#     g[op]=['+']
-#     g[op].append(operands[i+1])
-#     g[op]=['*']
-#     g[op].append(operands[i+1])
-#
-# print(g)
 
 def is_valid(calculated, wanted, operation_list):
     if len(operation_list) == 0:
@@ -72,8 +23,8 @@ def is_valid(calculated, wanted, operation_list):
         calculated = do_op(op1, op2, operator)
         if not is_valid(calculated, wanted, operation_list):
             continue
-        else: return True
-
+        else:
+            return True
 
 
 data = get_input(for_example=False, day=7)
