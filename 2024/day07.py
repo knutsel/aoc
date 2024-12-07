@@ -11,7 +11,7 @@ def do_op(operand1, operand2, operator):
             return int(str(operand1) + str(operand2))
 
 
-def is_valid(calculated, wanted, operation_list):
+def is_valid(calculated, wanted, operation_list, operator_list):
     if len(operation_list) == 0:
         if calculated == wanted:
             return True
@@ -20,9 +20,9 @@ def is_valid(calculated, wanted, operation_list):
     op1 = calculated
     op2 = operation_list[0]
     operation_list = operation_list[1:]
-    for operator in '*', '+', '|':
+    for operator in operator_list:
         calculated = do_op(op1, op2, operator)
-        if is_valid(calculated, wanted, operation_list):
+        if is_valid(calculated, wanted, operation_list, operator_list):
             return True
 
 
@@ -36,7 +36,9 @@ for line in data:
 
 p1 = p2 = 0
 for result, operands in equations.items():
-    if is_valid(operands[0], result, operands[1:]):
+    if is_valid(operands[0], result, operands[1:],  ['*', '+']):
         p1 += result
+    if is_valid(operands[0], result, operands[1:],  ['*', '+', '|']):
+        p2 += result
 
 print(p1, p2)
