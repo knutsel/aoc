@@ -11,18 +11,18 @@ def do_op(operand1, operand2, operator):
             return int(str(operand1) + str(operand2))
 
 
-def is_valid(calculated, wanted, operation_list, operator_list):
-    if len(operation_list) == 0:
+def is_valid(calculated, wanted, operand_list, operator_list):
+    if len(operand_list) == 0:
         if calculated == wanted:
             return True
         else:
             return False
     op1 = calculated
-    op2 = operation_list[0]
-    operation_list = operation_list[1:]
+    op2 = operand_list[0]
+    operand_list = operand_list[1:]
     for operator in operator_list:
         calculated = do_op(op1, op2, operator)
-        if is_valid(calculated, wanted, operation_list, operator_list):
+        if is_valid(calculated, wanted, operand_list, operator_list):
             return True
 
 
