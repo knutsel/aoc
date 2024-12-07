@@ -10,6 +10,7 @@ def print_grid():
 
 def walk(cur_loc, cur_dir):
     visited = set()
+    visited.add(cur_loc)
     vis_with_direction = set()
     while True:
         new_loc = (cur_loc[0] + step[cur_dir][0], cur_loc[1] + step[cur_dir][1])
@@ -45,13 +46,13 @@ for y, line in enumerate(data):  # use y, x in everything --> [line-no][char-on-
             start_loc = y, x
             direction = char
 
-vis, loop = walk(start_loc, direction)
+vis, _ = walk(start_loc, direction)
 
 p1 = len(vis)
 p2 = 0
 for i, v in enumerate(vis):
     grid[v[0]][v[1]] = '#'
-    vis, loop = walk(start_loc, direction)
+    _, loop = walk(start_loc, direction)
     if loop:
         p2 += 1
     grid[v[0]][v[1]] = '.'
