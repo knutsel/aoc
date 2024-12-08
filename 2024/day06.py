@@ -1,13 +1,6 @@
 from utils import get_input
 
 
-def print_grid():
-    for r in grid:
-        for c in r:
-            print(c, end="")
-        print("")
-
-
 def walk(cur_loc, cur_dir):
     visited = set()
     visited.add(cur_loc)
