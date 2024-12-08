@@ -1,30 +1,35 @@
 from utils import get_input
 
 
-def print_grid():
-    print(f"lines:{len(grid)}, cols:{len(grid[0])}")
-    for r in grid:
-        for c in r:
-            print(c, end="")
-        print("")
-
-
 def is_inbounds(y, x):
-    if x < 0 or y < 0 or x > len(grid[0]) - 1 or y > len(grid) - 1:
+    if x < 0 or y < 0 or x >= len(grid[0]) or y >= len(grid):
         return False
     return True
 
 
-def reflect(point_to_mirror, base_point):
-    mirrored_y = 2 * base_point[0] - point_to_mirror[0]
-    mirrored_x = 2 * base_point[1] - point_to_mirror[1]
+def reflect(point1, point2):
+    mirrored_y = 2 * point2[0] - point1[0]
+    mirrored_x = 2 * point2[1] - point1[1]
     return mirrored_y, mirrored_x
 
 
-data = get_input(for_example=True, day=8)
+def nline(point1: tuple[int, int], point2: tuple[int, int]) -> set:
+    lset = set()
+    y1, x1 = point1
+    y2, x2 = point2
+    lset.add((y2, x2))
+    newx = x2 + (x2 - x1)
+    newy = y2 + (y2 - y1)
+    while is_inbounds(newy, newx):
+        lset.add((newy, newx))
+        newx += (x2 - x1)
+        newy += (y2 - y1)
+    return lset
+
+
+data = get_input(for_example=False, day=8)
 grid = []
 antennas = {}
-p1 = p2 = 0
 for y, line in enumerate(data):  # use y, x in everything --> [line-no][char-on-line]
     grid.append(list(line))
     for x, char in enumerate(line):
@@ -35,21 +40,16 @@ for y, line in enumerate(data):  # use y, x in everything --> [line-no][char-on-
         else:
             antennas[char] = [(y, x)]
 
-resonators = []
-print_grid()
-rset = set()
+reflection_set = set()
+line_set = set()
 for a in antennas:
-    print(a, antennas[a])
     for a1 in antennas[a]:
         for a2 in antennas[a]:
             if a1 == a2:
                 continue
             reflection = reflect(a1, a2)
+            line_set = line_set.union(nline(a1, a2), nline(a1, a2))
             if is_inbounds(reflection[0], reflection[1]):
-                rset.add(tuple(reflection))
+                reflection_set.add(tuple(reflection))
 
-p1 = len(rset)
-for r in rset:
-    grid[r[0]][r[1]] = "#"
-print_grid()
-print(p1, p2)
+print(len(reflection_set), len(line_set))
