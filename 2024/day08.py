@@ -47,8 +47,8 @@ for a in antennas:
         for a2 in antennas[a]:
             if a1 == a2:
                 continue
-            reflection = reflect(a1, a2)
             line_set = line_set.union(nline(a1, a2), nline(a1, a2))
+            reflection = reflect(a1, a2)
             if is_inbounds(reflection[0], reflection[1]):
                 reflection_set.add(tuple(reflection))
 
