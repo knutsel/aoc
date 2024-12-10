@@ -11,9 +11,8 @@ def dijkstra(graph, node):
 
     while queue:
         current_distance, current_node = heapq.heappop(queue)
-        # relaxation
         for next_node, weight in graph[current_node].items():
-            # ##
+            # ## mod to dijkstra's algorithm for this puzzle
             if weight != 1:
                 continue
             # ##
@@ -44,43 +43,26 @@ def make_g(grid):
                 neighbor = (y + step[0], x + step[1])
                 if is_inbounds(neighbor[0], neighbor[1]):
                     nnodes[neighbor] = grid[neighbor[0]][neighbor[1]] - grid[y][x]
-                    # graph[neighbor][ (x, y)]= {(neighbor[0], neighbor[1]): (grid[y][x] - grid[neighbor[0]][neighbor[1]])}
             graph[(y, x)] = nnodes
 
     return graph, trail_starts
 
 
-# graph = {
-#     'A': {'B': 2, 'C': 3},
-#     'B': {'D': 3, 'E': 1},
-#     'C': {'F': 2},
-#     'D': {},
-#     'E': {'F': 1},
-#     'F': {}
-# }
 data = get_input(for_example=False, day=10)
 
-# graph = {}
 grid = []
 for y, line in enumerate(data):  # use y, x in everything --> [line-no][char-on-line]
     grid.append(list(map(int, list(line))))
 
 graph, trail_starts = make_g(grid)
 
-print_grid(grid)
-print(f"{trail_starts}\n---\n {graph}")
 
-score = 0
+p1 = 0
 for s in trail_starts:
-    print(s)
     distances, came_from = dijkstra(graph, s)
     for k in distances.keys():
         d = distances[k]
         if d == 9:
-            score += 1
-    # print(distances, came_from)
+            p1 += 1
 
-print(f"score: {score}")
-
-# dist, came_from = dijkstra(graph,'A')
-# print(f"d:{dist}\nf:{came_from}")
+print(f"p1: {p1}")
