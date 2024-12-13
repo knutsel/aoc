@@ -2,6 +2,30 @@ import heapq
 
 from utils import get_input, print_grid
 
+def dijkstra_all_paths(graph, node): # from chatgpt
+    # Priority queue to store (cost, node, path)
+    pq = [(0, node, [node])]
+    # Dictionary to store the shortest distance to each node
+    distances =  {node: float('inf') for node in graph}
+    # Dictionary to store all shortest paths to each node
+    paths = {node: None for node in graph}
+
+    while pq:
+        (cost, node, path) = heapq.heappop(pq)
+
+        for neighbor, weight in graph[node].items():
+            new_cost = cost + weight
+            new_path = path + [neighbor]
+
+            if neighbor not in distances or new_cost < distances[neighbor]:
+                distances[neighbor] = new_cost
+                paths[neighbor] = [new_path]
+                heapq.heappush(pq, (new_cost, neighbor, new_path))
+            elif new_cost == distances[neighbor]:
+                paths[neighbor].append(new_path)
+                heapq.heappush(pq, (new_cost, neighbor, new_path))
+
+    return paths
 
 def dijkstra(graph, node):
     distances = {node: float('inf') for node in graph}
@@ -64,5 +88,8 @@ for s in trail_starts:
         d = distances[k]
         if d == 9:
             p1 += 1
+
+        paths = dijkstra_all_paths(graph, s)
+        print(paths)
 
 print(f"p1: {p1}")
