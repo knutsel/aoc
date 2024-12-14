@@ -28,6 +28,15 @@ class MachineClass:
         else:
             return 0
 
+    def solve2(self):
+        P2=(self.P[0]+10000000000000, self.P[1]+10000000000000)
+        SA = (P2[0] * self.B[1] - P2[1] * self.B[0]) / (self.A[0] * self.B[1] - self.A[1] * self.B[0])
+        SB = (self.A[0] * P2[1] - self.A[1] * P2[0]) / (self.A[0] * self.B[1] - self.A[1] * self.B[0])
+        if SB.is_integer() and SA.is_integer():
+            return int(SA * self.price_a + SB * self.price_b)
+        else:
+            return 0
+
 
 machines = []  #
 mach_no = 0
@@ -47,9 +56,10 @@ for l in in_lines:
             m.P = (int(groups[0][1]), int(groups[0][2]))
 machines.append(m)
 
-sum = 0
+p1 = p2= 0
 for m in machines:
-    sum+=m.solve()
+    p1+=m.solve()
+    p2+=m.solve2()
     # print(m)
 
-print(sum)
+print(p1, p2)
