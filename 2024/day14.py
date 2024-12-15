@@ -1,10 +1,14 @@
+import os
 import re
+import time
 
-from utils import get_input
+from utils import get_input, print_grid
 
 in_lines = get_input(for_example=False, day=14)
 wide = 101
 tall = 103
+
+
 # wide = 7
 # tall = 11
 
@@ -30,17 +34,16 @@ class RobotClass:
             self.back_at_start_after = self.moves_done
 
     def quadrant(self):
-        if self.px > wide//2:
-            if self.py > tall//2:
+        if self.px > wide // 2:
+            if self.py > tall // 2:
                 return 2
-            elif self.py < tall//2:
+            elif self.py < tall // 2:
                 return 1
-        elif self.px < wide//2:
-            if self.py > tall//2:
+        elif self.px < wide // 2:
+            if self.py > tall // 2:
                 return 3
-            elif self.py < tall//2:
+            elif self.py < tall // 2:
                 return 0
-
 
 
 robots = []
@@ -51,33 +54,24 @@ for l in in_lines:
     except IndexError:
         print("HA")
 
-#     if len(groups) == 0:
-#         machines.append(m)
-#         m = MachineClass(3, 1)
-#         continue
-#     match groups[0][0]:
-#         case ('Button A:'):
-#             m.A = (int(groups[0][1]), int(groups[0][2]))
-#         case ('Button B:'):
-#             m.B = (int(groups[0][1]), int(groups[0][2]))
-#         case ('Prize:'):
-#             m.P = (int(groups[0][1]), int(groups[0][2]))
-# machines.append(m)
-
 p1 = p2 = 0
-# for m in machines:
-#     p1+=m.solve()
-#     p2+=m.solve2()
-#     # print(m)
 
-
-for i in range(100):
+for i in range(10000):
+    grid = [[0 for col in range(wide)] for row in range(tall)]
     for r in robots:
         r.move()
+        grid[r.py][r.px] = 1
+        # if i % 2 == 0:
+        # print('\033[2J')
+    os.system('clear')
+    print_grid(grid)
+    time.sleep(.01)
+    print(i)
+    # inp = input()
 
-quadrants = [0,0,0,0]
+quadrants = [0, 0, 0, 0]
 for r in robots:
-    if r.quadrant() != None :
+    if r.quadrant() != None:
         quadrants[r.quadrant()] += 1
 
-print(quadrants[0]*quadrants[1]*quadrants[2]*quadrants[3], p2)
+print(quadrants[0] * quadrants[1] * quadrants[2] * quadrants[3], p2)

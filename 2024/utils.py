@@ -11,5 +11,5 @@ def get_input(for_example, day):
 def print_grid(grid):
     for r in grid:
         for c in r:
-            print(c, end="")
+                print(c, end="")
         print("")
