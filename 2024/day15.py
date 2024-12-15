@@ -15,12 +15,11 @@ for y, l in enumerate(lines):
         continue
     else:
         grid.append(list(l))
-        x = l.find("@")
-        if x != -1:
+        if -1 != (x := l.find("@")):
             pos = (y, x)
 
 # print_grid(grid)
-print(moves)
+# print(moves)
 
 for m in moves:
     # print_grid(grid)
@@ -51,4 +50,5 @@ for y, _ in enumerate(grid):
         if grid[y][x] == "O":
             p1 += 100 * y + x
 
+print_grid(grid)
 print(p1)
