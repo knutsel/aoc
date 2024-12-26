@@ -31,7 +31,6 @@ def make_g(grid):
 
 
 def dijkstra(graph, node):
-    dir = "<"
     distances = {node: float('inf') for node in graph}
     distances[node] = 0
     came_from = {node: None for node in graph}
@@ -40,12 +39,11 @@ def dijkstra(graph, node):
     while queue:
         current_distance, current_node = heapq.heappop(queue)
         for next_node, weight in graph[current_node].items():
-            # if dir == "<>" and next_node[1] != current_node[1]:
-            #     weight += 1000
-            #     dir = "v^"
-            # elif dir == "v^" and next_node[0] != current_node[0]:
-            #     weight += 1000
-            #     dir = "<>"
+            prev = came_from[current_node]
+            if prev is None:
+                prev = (node[0], node[1], +1)  # start East facing
+            if not (prev[0] == current_node[0] == next_node[0]) and not (prev[1] == current_node[1] == next_node[1]):
+                weight += 1000
             distance_temp = current_distance + weight
             if distance_temp < distances[next_node]:
                 distances[next_node] = distance_temp
@@ -54,7 +52,7 @@ def dijkstra(graph, node):
     return distances, came_from
 
 
-data = get_input(for_example=True, day=16)
+data = get_input(for_example=False, day=16)
 
 grid = []
 for y, line in enumerate(data):  # use y, x in everything --> [line-no][char-on-line]
@@ -62,15 +60,27 @@ for y, line in enumerate(data):  # use y, x in everything --> [line-no][char-on-
 
 graph, start, end = make_g(grid)
 distances, came_from = dijkstra(graph, start)
-print_grid(grid)
-print(distances[end], came_from[end])
 current_node = end
-numsteps = 0
+numsteps = numturns = 0
+prevdir = dir = "^"
 while came_from[current_node] != start:
-    print(f"{current_node} ->{came_from[current_node]}")
     numsteps += 1
+    if prevdir != dir:
+        numturns += 1
+        prevdir = dir
+    if current_node[0] > came_from[current_node][0]:
+        dir = "v"
+    elif current_node[0] < came_from[current_node][0]:
+        dir = "^"
+    elif current_node[1] < came_from[current_node][1]:
+        dir = "<"
+    elif current_node[1] > came_from[current_node][1]:
+        dir = ">"
     current_node = came_from[current_node]
-    grid[current_node[0]][current_node[1]] = 'X'
+    grid[current_node[0]][current_node[1]] = dir
 
 print(numsteps)
 print_grid(grid)
+
+# the distance works for the examples, but is off-by-four for the real thing :-(
+print(distances[end], numsteps, numturns, numsteps + 1000 * numturns)
