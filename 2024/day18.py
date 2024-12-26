@@ -34,8 +34,6 @@ def dijkstra(graph, node):
     while queue:
         current_distance, current_node = heapq.heappop(queue)
         for next_node, weight in graph[current_node].items():
-            # if next_node in blocked[:current_distance]:
-            #     distance_temp =100000
             distance_temp = current_distance + weight
             if distance_temp < distances[next_node]:
                 distances[next_node] = distance_temp
@@ -55,35 +53,18 @@ if example:
 grid = [["." for x in range(numcols)] for y in range(numrows)]
 
 blocked = []
-for i in range(stop):  # use y, x in everything --> [line-no][char-on-line]
+for i in range(len(data)):  # use y, x in everything --> [line-no][char-on-line]
     line = data[i]
     r, c = int(line.split(",")[0]), int(line.split(",")[1])
     blocked.append((r, c))
     grid[r][c] = '#'
+    if i < 1024:
+        continue
+    graph, start, end = make_g(grid)
+    distances, came_from = dijkstra(graph, start)
+    if i == 1024:
+        print(f" p1: {distances[end]}")
+    if distances[end] > 9999999:
+        print(f"{i} {data[i]} -> {distances[end]}")
+        break
 
-graph, start, end = make_g(grid)
-distances, came_from = dijkstra(graph, start)
-current_node = end
-# numsteps = numturns = 0
-prevdir = dir = "^"
-while came_from[current_node] != start:
-    # numsteps += 1
-    if prevdir != dir:
-        # numturns += 1
-        prevdir = dir
-    if current_node[0] > came_from[current_node][0]:
-        dir = "v"
-    elif current_node[0] < came_from[current_node][0]:
-        dir = "^"
-    elif current_node[1] < came_from[current_node][1]:
-        dir = "<"
-    elif current_node[1] > came_from[current_node][1]:
-        dir = ">"
-    current_node = came_from[current_node]
-    grid[current_node[0]][current_node[1]] = dir
-
-# print(numsteps)
-print_grid(grid)
-
-# the distance works for the examples, but is off-by-four for the real thing :-(
-print(distances[end])
