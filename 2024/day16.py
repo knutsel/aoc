@@ -41,7 +41,7 @@ def dijkstra(graph, node):
         for next_node, weight in graph[current_node].items():
             prev = came_from[current_node]
             if prev is None:
-                prev = (node[0], node[1], +1)  # start East facing
+                prev = (node[0], node[1], -1)  # start East facing
             if not (prev[0] == current_node[0] == next_node[0]) and not (prev[1] == current_node[1] == next_node[1]):
                 weight += 1000
             distance_temp = current_distance + weight
@@ -52,7 +52,7 @@ def dijkstra(graph, node):
     return distances, came_from
 
 
-data = get_input(for_example=False, day=16)
+data = get_input(for_example=True, day=16)
 
 grid = []
 for y, line in enumerate(data):  # use y, x in everything --> [line-no][char-on-line]
